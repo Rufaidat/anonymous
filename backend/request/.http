@@ -1,0 +1,25 @@
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "anon",
+    "password": "anon"
+}
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "anon",
+    "password": "anon"
+}
+###
+
+POST http://localhost:3003/api/messages
+Content-Type: application/json
+Authorization: :bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFub24iLCJpZCI6IjYzNGM2M2E2MDE4MTg2ODBiNjU3YTY0MCIsImlhdCI6MTY2NTk1MzUzMSwiZXhwIjoxNjY1OTU3MTMxfQ.uyAvvC16MzF-47MBtVVkymO2A36_pC1TP24PkUHcvFA
+
+{
+    "message":"adjust first",
+    "username": "anon"
+}
