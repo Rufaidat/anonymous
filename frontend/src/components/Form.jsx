@@ -1,107 +1,182 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "./helpers/Button";
+import Navbar from "./navbar";
+import { useDispatch } from "react-redux";
+import { createUser } from "../reducers/userListReducer";
+import { setSuccessMessage } from "../reducers/sucessReducer";
+import { seterrorMessage } from "../reducers/errorReducer";
+import Success from "./Success";
+import Error from "./Error";
+import { setLogged } from "../reducers/loggedReducer";
+import { useEffect } from "react";
 const Form = () => {
+  const dispatch = useDispatch();
   const [cardStyle, setCardStyle] = useState({
     transform: "rotateY(-180deg)",
     transformStyle: "preserve-3d",
     transition: "transform 1s",
   });
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedAnonappUser");
+    if (loggedUserJSON) {
+      const log = JSON.parse(loggedUserJSON);
+      dispatch(setLogged(log));
+      // blogService.setToken(user.token);
+    }
+  }, []);
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const user = await loginService.login({
+        username,
+        password,
+      });
+      window.localStorage.setItem("loggedAnonappUser", JSON.stringify(user));
+      setUsername("");
+      setPassword("");
+      dispatch(setSuccessMessage(`Sign in sucessful`, 10));
+    } catch (exception) {
+      dispatch(seterrorMessage(`wrong username or password`, 10));
+    }
+  };
+
+  const addUser = (event) => {
+    event.preventDefault();
+    const newUser = {
+      username: event.target.username.value,
+      email: event.target.email.value,
+      password: event.target.password.value,
+    };
+    dispatch(createUser(newUser));
+    dispatch(
+      setSuccessMessage(
+        `Registration successful🎉, please login to continue`,
+        10
+      )
+    );
+    event.target.username.value = "";
+    event.target.email.value = "";
+    event.target.password.value = "";
+    setCardStyle({
+      transform: "rotateY(0deg)",
+      transformStyle: "preserve-3d",
+      transition: "transform 1s",
+    });
+  };
   return (
-    <div className=" container flex flex-col items-center mt-[7vh] text-white ">
-      <div
-        className=" card w-[80vw] h-[70vh] bg-purple-100 drop-shadow shadow-md shadow-purple-200 rounded"
-        style={{ perspective: "1000px" }}
-      >
+    <div>
+      <Navbar />
+      <Success />
+      <Error />
+      <div className="flex flex-col items-center justify-center mt-[7vh] text-white ">
         <div
-          id="card"
-          className=" inner-box w-[100%] h-[100%] relative text-white"
-          style={cardStyle}
+          className=" card w-[80vw] h-[70vh] bg-purple-100 drop-shadow shadow-md shadow-purple-200 rounded"
+          style={{ perspective: "1000px" }}
         >
           <div
-            className="card-front absolute w-full  h-full bg-purple-800 p-10 text-center flex justify-center"
-            style={{
-              backfaceVisibility: "hidden",
-            }}
+            id="card"
+            className=" inner-box w-[100%] h-[100%] relative text-white"
+            style={cardStyle}
           >
-            <form className="">
-              <h2 className="font-silkscreen text-white text-2xl font-bold">
-                SIGN IN
-              </h2>
-              <input
-                type="text"
-                name=""
-                className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-12"
-                placeholder="Username"
-              />
-              <input
-                type="password"
-                name=""
-                className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-12 mb-12"
-                placeholder="Password"
-              />
-              <Button text="login" />
-              <Link
-                className="block text-purple-100 mt-10 "
-                onClick={() =>
-                  setCardStyle({
-                    transform: "rotateY(-180deg)",
-                    transformStyle: "preserve-3d",
-                    transition: "transform 1s",
-                  })
-                }
-              >
-                Don't have an account?
-              </Link>
-              <Link className="block text-purple-100 mt-3">
-                Forgot password?
-              </Link>
-            </form>
-          </div>
-          <div
-            className="card-back absolute w-full  h-full bg-purple-800 p-10 text-center flex justify-center "
-            style={{
-              backfaceVisibility: "hidden",
-              transform: "rotateY(180deg)",
-            }}
-          >
-            {" "}
-            <form className="">
-              <h2 className="font-silkscreen text-white text-2xl font-bold">
-                REGISTER
-              </h2>
-              <input
-                type="text"
-                name=""
-                className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-12"
-                placeholder="Username"
-              />
-              <input
-                type="text"
-                name=""
-                className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-10"
-                placeholder="email"
-              />
-              <input
-                type="password"
-                name=""
-                className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-10 mb-10"
-                placeholder="Password"
-              />
-              <Button text="register" />
-              <Link
-                className="block text-purple-100 mt-6 "
-                onClick={() =>
-                  setCardStyle({
-                    transform: "rotateY(0deg)",
-                    transformStyle: "preserve-3d",
-                    transition: "transform 1s",
-                  })
-                }
-              >
-                Have an account?
-              </Link>
-            </form>
+            <div
+              className="card-front absolute w-full  h-full bg-purple-800 p-10 text-center flex justify-center"
+              style={{
+                backfaceVisibility: "hidden",
+              }}
+            >
+              <form className="" onSubmit={handleLogin}>
+                <h2 className="font-silkscreen text-white text-2xl font-bold">
+                  SIGN IN
+                </h2>
+                <input
+                  type="text"
+                  name=""
+                  className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-12 block"
+                  placeholder="Username"
+                  onChange={({ target }) => setUsername(target.value)}
+                />
+                <input
+                  type="password"
+                  name=""
+                  className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-12 mb-12 block"
+                  placeholder="Password"
+                  onChange={({ target }) => setPassword(target.value)}
+                />
+                <div className="flex justify-center">
+                  {" "}
+                  <Button text="login" />
+                </div>
+                <Link
+                  className="block text-purple-100 mt-10 "
+                  onClick={() =>
+                    setCardStyle({
+                      transform: "rotateY(-180deg)",
+                      transformStyle: "preserve-3d",
+                      transition: "transform 1s",
+                    })
+                  }
+                >
+                  Don't have an account?
+                </Link>
+                <Link className="block text-purple-100 mt-3">
+                  Forgot password?
+                </Link>
+              </form>
+            </div>
+            <div
+              className="card-back absolute w-full  h-full bg-purple-800 p-10 text-center flex justify-center "
+              style={{
+                backfaceVisibility: "hidden",
+                transform: "rotateY(180deg)",
+              }}
+            >
+              {" "}
+              <form className="" onSubmit={addUser}>
+                <h2 className="font-silkscreen text-white text-2xl font-bold">
+                  REGISTER
+                </h2>
+                <input
+                  type="text"
+                  name="username"
+                  className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-12 block"
+                  placeholder="Username"
+                  id="username"
+                />
+                <input
+                  type="text"
+                  name="email"
+                  className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-10 block"
+                  placeholder="email"
+                />
+                <input
+                  type="password"
+                  name="password"
+                  className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-10 mb-10"
+                  placeholder="Password"
+                />
+                <div className="flex justify-center">
+                  {" "}
+                  <Button text="register" />
+                </div>
+                <Link
+                  className="block text-purple-100 mt-6 "
+                  onClick={() =>
+                    setCardStyle({
+                      transform: "rotateY(0deg)",
+                      transformStyle: "preserve-3d",
+                      transition: "transform 1s",
+                    })
+                  }
+                >
+                  Have an account?
+                </Link>
+              </form>
+            </div>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, minlength: 3 },
   passwordHash: String,
+  email: { type: String },
   messages: [
     {
       type: mongoose.Schema.Types.ObjectId,
