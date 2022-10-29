@@ -13,10 +13,16 @@ const usersSlice = createSlice({
     appendUsers(state, action) {
       state.push(action.payload);
     },
+    update(state, action) {
+      const userUpdate = action.payload;
+      return state.map((elem) =>
+        elem.id !== userUpdate.id ? elem : userUpdate
+      );
+    },
   },
 });
 
-export const { appendUsers, setUsers } = usersSlice.actions;
+export const { appendUsers, setUsers, update } = usersSlice.actions;
 
 export const initializeUsers = () => {
   return async (dispatch) => {
@@ -32,4 +38,14 @@ export const createUser = (content) => {
     console.log(newUser);
   };
 };
+
+export const updateUser = (user) => {
+  console.log(user);
+  // return async (dispatch) => {
+  //   const newUser = await userService.update(user.id, changedUser);
+
+  //   dispatch(update(newUser));
+  // };
+};
+
 export default usersSlice.reducer;

@@ -11,7 +11,10 @@ messagesRouter.get("/", async (request, response) => {
 messagesRouter.post("/", async (request, response, next) => {
   const body = request.body;
   console.log(body);
-  const user = await User.findOne(body._id);
+  const username = {
+    username: body.username,
+  };
+  const user = await User.findOne(username);
   console.log(user);
   const message = new Message({
     message: body.message,

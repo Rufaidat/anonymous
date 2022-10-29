@@ -1,9 +1,29 @@
 import Button from "./helpers/Button";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { BrowserRouter as Router, Link, useParams } from "react-router-dom";
+import { createMessage } from "../reducers/messageReducer";
+import { useDispatch } from "react-redux";
+import { setSuccessMessage } from "../reducers/sucessReducer";
+import Success from "./Success";
 const Message = () => {
+  const dispatch = useDispatch();
+  const params = useParams().username;
+  const sendMessage = (event) => {
+    event.preventDefault();
+    const newMessage = {
+      message: event.target.text.value,
+      username: params,
+    };
+    dispatch(createMessage(newMessage));
+    event.target.text.value = "";
+    dispatch(setSuccessMessage(`message sent🎉 `, 10));
+  };
   return (
     <div className="py-10 px-5 ">
-      <form className=" flex flex-col items-center text-white">
+      <form
+        onSubmit={sendMessage}
+        className=" flex flex-col items-center text-white"
+      >
+        <Success />
         <h2 className="font-silkscreen text-white text-2xl font-bold mb-6">
           say something...
         </h2>
@@ -14,7 +34,8 @@ const Message = () => {
         <textarea
           type="text"
           rows={5}
-          name=""
+          // name="text"
+          id="text"
           className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-8 block pb-10"
           placeholder="leave a message here..."
           required

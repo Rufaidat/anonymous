@@ -10,6 +10,11 @@ const create = async (newObject) => {
   return response.data;
 };
 
-const userService = { getAll, create };
+const update = async (id, newObject) => {
+  const request = axios.patch(`${baseUrl}/${id}`, newObject);
+  return request.then((response) => response.data);
+};
+
+const userService = { getAll, create, update };
 
 export default userService;

@@ -1,19 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "./helpers/Button";
 import Navbar from "./navbar";
-import { useDispatch } from "react-redux";
-import { createUser } from "../reducers/userListReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { createUser } from "../reducers/usersReducer";
 import { setSuccessMessage } from "../reducers/sucessReducer";
-import { seterrorMessage } from "../reducers/errorReducer";
+import loginService from "../services/login";
 import Success from "./Success";
 import Error from "./Error";
 import { setLogged } from "../reducers/loggedReducer";
-import { useEffect } from "react";
+import { seterrorMessage } from "../reducers/errorReducer";
+import { useNavigate } from "react-router-dom";
 const Form = () => {
+  const nav = useNavigate();
   const dispatch = useDispatch();
   const [cardStyle, setCardStyle] = useState({
-    transform: "rotateY(-180deg)",
+    transform: "rotateY(0deg)",
     transformStyle: "preserve-3d",
     transition: "transform 1s",
   });
@@ -36,12 +38,21 @@ const Form = () => {
         username,
         password,
       });
+      dispatch(setLogged(user));
       window.localStorage.setItem("loggedAnonappUser", JSON.stringify(user));
       setUsername("");
       setPassword("");
-      dispatch(setSuccessMessage(`Sign in sucessful`, 10));
+      console.log("login successful");
+
+      console.log(
+        window.localStorage.getItem("loggedAnonappUser", JSON.stringify(user))
+      );
+      dispatch(setSuccessMessage(`Login successful🎉 `, 10));
+      nav("/messages");
     } catch (exception) {
-      dispatch(seterrorMessage(`wrong username or password`, 10));
+      console.log("error");
+      console.log(exception);
+      dispatch(seterrorMessage(`Wrong username or password`, 10));
     }
   };
 
@@ -59,6 +70,11 @@ const Form = () => {
         10
       )
     );
+    setCardStyle({
+      transform: "rotateY(0deg)",
+      transformStyle: "preserve-3d",
+      transition: "transform 1s",
+    });
     event.target.username.value = "";
     event.target.email.value = "";
     event.target.password.value = "";
@@ -107,7 +123,7 @@ const Form = () => {
                   placeholder="Password"
                   onChange={({ target }) => setPassword(target.value)}
                 />
-                <div className="flex justify-center">
+                <div className="flex justify-center  my-3 mt-6 ">
                   {" "}
                   <Button text="login" />
                 </div>
@@ -159,7 +175,7 @@ const Form = () => {
                   className="bg-transparent outline-none border-b-2 w-60 border-purple-100 mt-10 mb-10"
                   placeholder="Password"
                 />
-                <div className="flex justify-center">
+                <div className="flex justify-center  my-3 mt-6 ">
                   {" "}
                   <Button text="register" />
                 </div>

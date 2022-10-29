@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import blogService from "../services/message";
+import messageService from "../services/message";
 
 const initialState = [];
 
@@ -10,57 +10,27 @@ const messageSlice = createSlice({
     appendMessages(state, action) {
       state.push(action.payload);
     },
-    // setBlogs(state, action) {
-    //   return action.payload;
-    // },
-    // setLike(state, action) {
-    //   const blogUpdate = action.payload;
-    //   return state.map((elem) =>
-    //     elem.id !== blogUpdate.id ? elem : blogUpdate
-    //   );
-    // },
+    setMessages(state, action) {
+      return action.payload;
+    },
   },
 });
 
-export const { appendMessages } = messageSlice.actions;
+export const { appendMessages, setMessages } = messageSlice.actions;
 
 export const initializeMessages = () => {
   return async (dispatch) => {
-    const blogs = await blogService.getAll();
-    dispatch(setBlogs(blogs));
+    const message = await messageService.getAll();
+    dispatch(setMessages(message));
   };
 };
 
-export const createBlog = (content) => {
+export const createMessage = (content) => {
   return async (dispatch) => {
-    const newMessage = await blogService.create(content);
-    dispatch(appendBlogs(newMessage));
+    const newMessage = await messageService.create(content);
+    dispatch(appendMessages(newMessage));
     console.log(newMessage);
   };
 };
-
-// export const like = (blog) => {
-//   const changedBlog = { ...blog, votes: blog.votes + 1 };
-//   return async (dispatch) => {
-//     const newMessage = await blogService.update(blog.id, changedBlog);
-//     dispatch(setLike(newMessage));
-//   };
-// };
-
-// export const comment = (blog) => {
-//   const changedBlog = { ...blog, votes: blog.votes + 1 };
-//   return async (dispatch) => {
-//     const newMessage = await blogService.update(blog.id, changedBlog);
-//     dispatch(setLike(newMessage));
-//   };
-// };
-
-// export const remove = (blog) => {
-//   return async (dispatch) => {
-//     await blogService.remove(blog.id);
-//     const blogs = await blogService.getAll();
-//     dispatch(setBlogs(blogs));
-//   };
-// };
 
 export default messageSlice.reducer;

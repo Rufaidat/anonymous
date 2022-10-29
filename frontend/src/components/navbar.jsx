@@ -5,16 +5,31 @@ import MenuIcon from "../images/menu";
 import CloseIcon from "../images/close";
 // import useMediaQuery from "@mui/material/useMediaQuery";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { removelogged } from "../reducers/loggedReducer";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const nav = useNavigate();
+  const loggedState = useSelector((state) => state.logged);
   const [hamburger, setHamburger] = useState(true);
   const handleClick = () => {
     setHamburger(!hamburger);
   };
+
+  const logout = () => {
+    setHamburger(true);
+    dispatch(removelogged());
+    nav("/login");
+    window.localStorage.removeItem("loggedAnonappUser");
+  };
+
   const Icon = () => {
     if (hamburger) {
       return (
-        <div className="flex justify-between">
+        <div className="flex justify-between ">
           <IconSvgComponent /> <MenuIcon onClick={handleClick} />
         </div>
       );
@@ -45,11 +60,39 @@ const Navbar = () => {
               Contact
             </Link>
             <Link
-              className=" block text-lg"
-              to="login"
+              className={"text-lg"}
+              style={loggedState ? { display: "none" } : { display: "block" }}
+              to="/login"
               onClick={() => setHamburger(true)}
             >
-              login
+              Get started
+            </Link>
+            <Link
+              className="text-lg "
+              style={!loggedState ? { display: "none" } : { display: "block" }}
+              onClick={() => {
+                setHamburger(true);
+              }}
+              to="/messages"
+            >
+              Messages
+            </Link>
+            <Link
+              className="text-lg "
+              style={!loggedState ? { display: "none" } : { display: "block" }}
+              onClick={() => {
+                setHamburger(true);
+              }}
+              to="/settings"
+            >
+              settings
+            </Link>
+            <Link
+              className="text-lg"
+              style={!loggedState ? { display: "none" } : { display: "block" }}
+              onClick={logout}
+            >
+              log out
             </Link>
           </div>
         </div>

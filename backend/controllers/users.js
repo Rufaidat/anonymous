@@ -1,3 +1,4 @@
+const logger = require("../utils/logger");
 const bcrypt = require("bcrypt");
 const usersRouter = require("express").Router();
 const User = require("../models/user");
@@ -42,6 +43,19 @@ usersRouter.post("/", async (request, response) => {
   const savedUser = await user.save();
 
   response.status(201).json(savedUser);
+});
+
+usersRouter.patch("/:id", async (request, response, next) => {
+  const body = request.body;
+  console.log(body);
+  const id = request.params.id;
+  const existingUser = await User.findOne({ id });
+
+  User.findByIdAndUpdate(existingUser.id, body)
+    .then((updatedUser) => {
+      response.json({ updatedUser });
+    })
+    .catch((error) => next(error));
 });
 
 module.exports = usersRouter;

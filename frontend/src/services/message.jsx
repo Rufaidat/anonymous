@@ -7,10 +7,10 @@ const getAll = async () => {
 };
 
 const create = async (newObject) => {
-  const response = await axios.post(baseUrl, newObject, config);
+  const response = await axios.post(baseUrl, newObject);
   return response.data;
 };
 
-const blogService = { getAll, create };
+const messageService = { getAll, create };
 
-export default blogService;
+export default messageService;

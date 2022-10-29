@@ -17,7 +17,9 @@ const Intro = () => {
       </p>
       <Link to="/login">
         {" "}
-        <Button text="get started" />
+        <div className="my-3 mt-6">
+          <Button text="get started" />
+        </div>
       </Link>
     </div>
   );
