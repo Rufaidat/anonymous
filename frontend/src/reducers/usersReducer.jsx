@@ -39,13 +39,4 @@ export const createUser = (content) => {
   };
 };
 
-export const updateUser = (user) => {
-  console.log(user);
-  // return async (dispatch) => {
-  //   const newUser = await userService.update(user.id, changedUser);
-
-  //   dispatch(update(newUser));
-  // };
-};
-
 export default usersSlice.reducer;
